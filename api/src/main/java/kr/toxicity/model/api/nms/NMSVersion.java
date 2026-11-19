@@ -23,46 +23,10 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public enum NMSVersion {
     /**
-     * Minecraft 1.21.4
-     * @since 1.15.2
-     */
-    V1_21_R3(46),
-    /**
-     * Minecraft 1.21.5
-     * @since 1.15.2
-     */
-    V1_21_R4(55),
-    /**
-     * Minecraft 1.21.6 - 1.21.8
-     * @since 1.15.2
-     */
-    V1_21_R5(64),
-    /**
-     * Minecraft 1.21.9 - 1.21.10
-     * @since 1.15.2
-     */
-    V1_21_R6(69),
-    /**
-     * Minecraft 1.21.11
-     * @since 1.15.2
-     */
-    V1_21_R7(75),
-    /**
-     * Minecraft 26.1.x
-     * @since 3.0.0
-     */
-    V26_R1(84),
-    /**
-     * Minecraft 26.2.x
-     * @since 3.2.0
-     */
-    V26_R2(88),
-    /**
      * Minecraft 26.3.x
      * @since 3.5.0
      */
-    V26_R3(97)
-    ;
+    V26_R3(97);
     /**
      * The resource pack format version (pack.mcmeta).
      */
@@ -75,7 +39,7 @@ public enum NMSVersion {
      * @since 1.15.2
      */
     public static @NotNull NMSVersion first() {
-        return values()[0];
+        return V26_R3;
     }
 
     /**
@@ -85,7 +49,6 @@ public enum NMSVersion {
      * @since 1.15.2
      */
     public static @NotNull NMSVersion latest() {
-        var entries = values();
-        return entries[entries.length - 1];
+        return V26_R3;
     }
 }

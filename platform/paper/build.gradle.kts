@@ -6,29 +6,14 @@ plugins {
     alias(libs.plugins.resourcefactory.paper)
 }
 
+val pluginName = "Kokonut_Model"
 val libraryDir: Provider<RegularFile> = layout.buildDirectory.file("generated/paper-library")
 val dependenciesContent: String = libs.bundles.library.map { bundle ->
     bundle.joinToString("\n") { dep -> dep.toString() }
 }.get()
 
 dependencies {
-    shade(project(":nms:v1_21_R3")) { isTransitive = false }
-    shade(project(":nms:v1_21_R4")) { isTransitive = false }
-    shade(project(":nms:v1_21_R5")) { isTransitive = false }
-    shade(project(":nms:v1_21_R6")) { isTransitive = false }
-    shade(project(":nms:v1_21_R7")) { isTransitive = false }
-    shade(project(":nms:v26_R1")) { isTransitive = false }
-    shade(project(":nms:v26_R2")) { isTransitive = false }
     shade(project(":nms:v26_R3")) { isTransitive = false }
-}
-
-modrinth {
-    gameVersions = SUPPORTED_VERSIONS
-    loaders = PAPER_LOADERS
-}
-
-tasks.modrinth {
-    dependsOn(tasks.modrinthSyncBody)
 }
 
 val generatePaperLibrary = tasks.register("generatePaperLibrary") {
@@ -46,6 +31,8 @@ val generatePaperLibrary = tasks.register("generatePaperLibrary") {
 }
 
 tasks.shadowJar {
+    archiveBaseName.set(pluginName)
+    archiveClassifier.set("")
     dependsOn(generatePaperLibrary)
     from(libraryDir)
     manifest {
@@ -57,12 +44,12 @@ paperPluginYaml {
     main = "$group.paper.BetterModelPaper"
     loader = "$group.paper.BetterModelLoader"
     version = project.version.toString()
-    name = "BetterModel"
+    this.name = pluginName
     foliaSupported = true
-    apiVersion = "1.21.4"
-    author = "toxicity188"
+    apiVersion = providers.gradleProperty("minecraft_version").get()
+    author = "toxicity188, pingpong"
     contributors = listOf("https://github.com/toxicity188/BetterModel/graphs/contributors")
-    description = "Modern Bedrock model engine for Minecraft Java Edition"
+    description = "에고버스 플러그인"
     website = "https://modrinth.com/plugin/bettermodel"
     dependencies {
         server(

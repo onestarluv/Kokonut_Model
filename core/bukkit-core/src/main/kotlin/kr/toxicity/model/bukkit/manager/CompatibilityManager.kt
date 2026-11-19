@@ -7,13 +7,11 @@
 
 package kr.toxicity.model.bukkit.manager
 
-import kr.toxicity.model.api.bukkit.BetterModelBukkit
 import kr.toxicity.model.api.pack.PackZipper
 import kr.toxicity.model.bukkit.compatibility.citizens.CitizensCompatibility
 import kr.toxicity.model.bukkit.compatibility.mythicmobs.MythicMobsCompatibility
 import kr.toxicity.model.bukkit.compatibility.nexo.NexoCompatibility
 import kr.toxicity.model.bukkit.compatibility.skinsrestorer.SkinsRestorerCompatibility
-import kr.toxicity.model.bukkit.purpur.PurpurHook
 import kr.toxicity.model.bukkit.util.registerListener
 import kr.toxicity.model.manager.GlobalManager
 import kr.toxicity.model.manager.ReloadPipeline
@@ -43,7 +41,6 @@ object CompatibilityManager : GlobalManager {
     )
 
     override fun start() {
-        if (BetterModelBukkit.IS_PURPUR) PurpurHook.start()
         Bukkit.getPluginManager().run {
             compatibilities.entries.removeIf { (k, v) ->
                 if (isPluginEnabled(k)) {

@@ -1,13 +1,11 @@
 plugins {
     id("bukkit-conventions")
-    id("modrinth-conventions")
     id("com.gradleup.shadow")
 }
 
 val shade: Configuration = configurations.getByName("shade")
 val versionString = version.toString()
 val groupString = group.toString()
-val classifier: String = project.name.substringAfterLast('-')
 
 dependencies {
     compileOnly(project(":bettermodel-api"))
@@ -38,8 +36,6 @@ tasks {
                 "library-${it.name}" to it.version
             })
         }
-        archiveBaseName = rootProject.name
-        archiveClassifier = classifier
         destinationDirectory = rootProject.layout.buildDirectory.dir("libs")
         dependencies {
             exclude(dependency("org.jetbrains:annotations:26.0.2"))
@@ -52,15 +48,5 @@ tasks {
         prefix("org.incendo.cloud")
         prefix("org.bstats")
         prefix("net.byteflux.libby")
-    }
-}
-
-modrinth {
-    uploadFile.set(tasks.shadowJar)
-    dependencies {
-        optional.project(
-            "mythicmobs",
-            "skinsrestorer"
-        )
     }
 }

@@ -15,11 +15,12 @@ import kr.toxicity.model.api.event.PluginEndReloadEvent
 import kr.toxicity.model.api.event.PluginStartReloadEvent
 import kr.toxicity.model.api.manager.*
 import kr.toxicity.model.api.pack.PackZipper
-import kr.toxicity.model.api.version.MinecraftVersion.*
+import kr.toxicity.model.api.version.MinecraftVersion
 import kr.toxicity.model.bukkit.configuration.PluginConfiguration
 import kr.toxicity.model.bukkit.manager.CompatibilityManager
 import kr.toxicity.model.bukkit.manager.EntityManager
 import kr.toxicity.model.bukkit.manager.PlayerManagerImpl
+import kr.toxicity.model.bukkit.nms.v26_R3.NMSImpl
 import kr.toxicity.model.bukkit.scheduler.BukkitScheduler
 import kr.toxicity.model.bukkit.scheduler.PaperScheduler
 import kr.toxicity.model.manager.*
@@ -28,37 +29,23 @@ import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.semver4j.Semver
 
-private typealias Latest = kr.toxicity.model.bukkit.nms.v26_R3.NMSImpl
-
 internal class BetterModelProperties(
     private val plugin: AbstractBetterModelPlugin
 ) {
     private lateinit var _config: BetterModelConfig
     private var _metrics: Metrics? = null
 
-    val version = parse(Bukkit.getBukkitVersion().substringBefore('-'))
-    val nms = when (version) {
-        V26_3 -> Latest()
-        V26_2 -> kr.toxicity.model.bukkit.nms.v26_R2.NMSImpl()
-        V26_1, V26_1_1, V26_1_2 -> kr.toxicity.model.bukkit.nms.v26_R1.NMSImpl()
-        V1_21_11 -> kr.toxicity.model.bukkit.nms.v1_21_R7.NMSImpl()
-        V1_21_9, V1_21_10 -> kr.toxicity.model.bukkit.nms.v1_21_R6.NMSImpl()
-        V1_21_6, V1_21_7, V1_21_8 -> kr.toxicity.model.bukkit.nms.v1_21_R5.NMSImpl()
-        V1_21_5 -> kr.toxicity.model.bukkit.nms.v1_21_R4.NMSImpl()
-        V1_21_4 -> kr.toxicity.model.bukkit.nms.v1_21_R3.NMSImpl()
-        else -> {
-            warn(
-                "Note: this version is officially untested.".toComponent(),
-                "So be careful to use!".toComponent()
-            )
-            Latest()
+    val version = MinecraftVersion.parse(Bukkit.getBukkitVersion().substringBefore('-'))
+    val nms = run {
+        check(version.major == MinecraftVersion.V26_3.major && version.minor == MinecraftVersion.V26_3.minor) {
+            "BetterModel requires Paper 26.3.x (found $version)."
         }
+        NMSImpl()
     }
     val scheduler = if (BetterModelBukkit.IS_FOLIA) PaperScheduler() else BukkitScheduler()
     val evaluator = BetterModelEvaluatorImpl()
     val eventbus = BukkitModelEventBusImpl()
-    @Suppress("DEPRECATION") //To support Spigot :(
-    val semver = Semver.coerce(plugin.description.version).ifNull { "Unable to load BetterModel's sermver." }
+    val semver = Semver.coerce(plugin.pluginMeta.version).ifNull { "Unable to load BetterModel's semver." }
     val snapshot = runCatching {
         plugin.attributes().getValue("Dev-Build").toInt()
     }.getOrElse {

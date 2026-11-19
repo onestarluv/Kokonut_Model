@@ -7,10 +7,7 @@ dependencies {
     shade(project(":bettermodel-api:bettermodel-bukkit-api")) { isTransitive = false }
     shade(project(":bettermodel-core")) { isTransitive = false }
 
-    shade(project(":purpur"))
-    rootProject.project("nms").subprojects.forEach {
-        compileOnly(it)
-    }
+    compileOnly(project(":nms:v26_R3"))
 
     shade(libs.bundles.shadedLibrary) {
         exclude("net.kyori")

@@ -26,4 +26,3 @@ public interface HitBoxEvent extends ModelEvent {
      */
     @NotNull HitBox getHitBox();
 }
-

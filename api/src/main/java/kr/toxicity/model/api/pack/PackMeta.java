@@ -249,7 +249,7 @@ public record PackMeta(
         private final List<OverlayEntry> entries = new ArrayList<>();
         private VersionRange supportedFormats = new VersionRange(
             NMSVersion.first().getMetaVersion(),
-            NMSVersion.latest().getMetaVersion() //<=1.21.8
+            NMSVersion.latest().getMetaVersion()
         );
         private PackVersion minFormat = new PackVersion(NMSVersion.first().getMetaVersion());
         private PackVersion maxFormat = new PackVersion(NMSVersion.latest().getMetaVersion());
